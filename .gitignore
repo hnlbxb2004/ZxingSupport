@@ -6,6 +6,8 @@
 # Files for the Dalvik VM
 *.dex
 
+*.iml
+
 # Java class files
 *.class
 
@@ -15,6 +17,7 @@ gen/
 
 # Gradle files
 .gradle/
+.idea/
 build/
 
 # Local configuration file (sdk path, etc)
