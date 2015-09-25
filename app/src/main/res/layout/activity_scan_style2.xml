@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <SurfaceView
+        android:id="@+id/sufaceview"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" />
+
+    <com.zxing.support.library.view.FinderViewStyle2
+        android:id="@+id/capture_viewfinder_view"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_gravity="center"
+        android:background="@android:color/transparent" />
+
+    <ImageView
+        android:id="@+id/decode_preview"
+        android:layout_margin="5dp"
+        android:alpha="0.7"
+        android:layout_width="100dp"
+        android:layout_height="100dp"/>
+
+
+
+</RelativeLayout>
