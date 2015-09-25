@@ -50,7 +50,7 @@
 ##Demo 下载地址
 
 
-[点击下载](./tools/scan_demo.apk)
+[点击下载](https://raw.githubusercontent.com/hnlbxb2004/ZxingSupport/master/tools/scan_demo.apk)
 
 
 
