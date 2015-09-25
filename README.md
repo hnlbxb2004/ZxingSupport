@@ -50,7 +50,7 @@
 ##Demo 下载地址
 
 
-[点击下载](http://git.oschina.net/snails/ZxingSupport/raw/master/tools/scan_demo.apk)
+[点击下载](./tools/scan_demo.apk)
 
 
 
