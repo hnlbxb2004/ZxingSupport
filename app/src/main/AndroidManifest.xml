@@ -18,6 +18,8 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+        <activity android:name=".ScanActivityStyle1" android:theme="@style/AppTheme.NoActionBarFullScreen"/>
+        <activity android:name=".ScanActivityStyle2" android:theme="@style/AppTheme.NoActionBarFullScreen"/>
     </application>
 
 </manifest>
