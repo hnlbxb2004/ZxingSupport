@@ -7,7 +7,7 @@
 
 ##Gradle 依赖配置
 
-      compile 'com.github.hnlbxb2004:zxingsupport:0.4'
+      compile 'com.github.hnlbxb2004:zxingsupport:0.5'
 
 ##扫码
     //初始化
