@@ -1,6 +1,8 @@
 package com.zxing.support.demo;
 
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
@@ -95,6 +97,14 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             if (data != null){
                 String result = data.getStringExtra("result");
                 mResultTextView.setText(result);
+                Bitmap barcode = null;
+                byte[] compressedBitmap = data.getByteArrayExtra("resultByte");
+                if (compressedBitmap != null) {
+                    barcode = BitmapFactory.decodeByteArray(compressedBitmap, 0, compressedBitmap.length, null);
+                    barcode = barcode.copy(Bitmap.Config.RGB_565, true);
+                    mQRCodeImage.setImageBitmap(barcode);
+                }
+
             }else {
                 mResultTextView.setText("没有结果！！！");
             }

@@ -44,9 +44,10 @@ public class ScanActivityStyle1 extends AppCompatActivity implements QRCodeSuppo
     }
 
     @Override
-    public void onScanResult(String notNullResult) {
+    public void onScanResult(String notNullResult,byte[] comp) {
         Intent intent = new Intent();
         intent.putExtra("result",notNullResult);
+        intent.putExtra("resultByte",comp);
         setResult(Activity.RESULT_OK, intent);
         finish();
     }

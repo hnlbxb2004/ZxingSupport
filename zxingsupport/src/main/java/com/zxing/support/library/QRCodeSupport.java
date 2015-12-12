@@ -125,7 +125,7 @@ public class QRCodeSupport {
 
 
 
-    private class CameraDecodeTask extends AsyncTask <byte[], Void, Result> {
+    private class CameraDecodeTask extends AsyncTask <byte[], Void, QRCodeCameraDecode.CameraDecodeResult> {
 
         @Override
         protected void onPreExecute() {
@@ -136,24 +136,24 @@ public class QRCodeSupport {
         }
 
         @Override
-        protected void onPostExecute(Result result) {
+        protected void onPostExecute(QRCodeCameraDecode.CameraDecodeResult result) {
             super.onPostExecute(result);
-            if (result == null){ // 未解析出来，重新解析
+            if (result.getDecodeResult() == null){ // 未解析出来，重新解析
                 if (isPrivew)
                 mCameraManager.requestPreview(mPreviewCallback);
             }else { //解析出来
 
-                String resultString = result.getText();
+                String resultString = result.getDecodeResult().getText();
 
                 if (!TextUtils.isEmpty(resultString) && mOnScanResultListener != null){
 
-                    mOnScanResultListener.onScanResult(resultString);
+                    mOnScanResultListener.onScanResult(resultString,result.getDecodeByte());
                 }
             }
         }
 
         @Override
-        protected Result doInBackground(byte[]... params) {
+        protected QRCodeCameraDecode.CameraDecodeResult doInBackground(byte[]... params) {
 
             return mCameraDecode.decode(params[0]);
         }
@@ -161,7 +161,12 @@ public class QRCodeSupport {
 
 
     public interface OnScanResultListener{
-        void onScanResult(String notNullResult);
+        /**
+         * 扫描结果的监听
+         * @param notNullResult  解析结果的字符串,不会为null
+         * @param resultByte     解析结果的byte数组,
+         */
+        void onScanResult(String notNullResult,byte[] resultByte);
     }
 
 }

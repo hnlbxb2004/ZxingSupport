@@ -62,11 +62,21 @@ public class CameraConfig {
             Display display = manager.getDefaultDisplay();
             screenResolution = new Point(display.getWidth(), display.getHeight());
             Log.d(TAG, "Screen resolution: " + screenResolution);
-            cameraResolution = CameraConfigurationUtils.findBestPreviewSizeValue(parameters, screenResolution);
+
+            /** 因为换成了竖屏显示，所以不替换屏幕宽高得出的预览图是变形的 */
+            Point screenResolutionForCamera = new Point();
+            screenResolutionForCamera.x = screenResolution.x;
+            screenResolutionForCamera.y = screenResolution.y;
+
+            if (screenResolution.x < screenResolution.y) {
+                screenResolutionForCamera.x = screenResolution.y;
+                screenResolutionForCamera.y = screenResolution.x;
+            }
+
+            cameraResolution = CameraConfigurationUtils.findBestPreviewSizeValue(parameters, screenResolutionForCamera);
             Log.d(TAG, "Camera resolution: " + cameraResolution);
         }
     }
-
 
     /**
      * 设置照相机

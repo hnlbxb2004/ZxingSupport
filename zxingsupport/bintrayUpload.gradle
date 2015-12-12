@@ -1,9 +1,8 @@
 // 根节点添加
 apply plugin: 'com.github.dcendents.android-maven'
 apply plugin: 'com.jfrog.bintray'
-
 // 根节点添加
-version = "0.5"
+version = "0.6"
 
 def gitUrl = 'https://github.com/hnlbxb2004/ZxingSupport.git' // project git
 def siteUrl = 'https://github.com/hnlbxb2004/ZxingSupport' // project git
@@ -47,10 +46,20 @@ task sourcesJar(type: Jar) {
     classifier = 'sources'
 }
 
+
 task javadoc(type: Javadoc) {
     source = android.sourceSets.main.java.srcDirs
-    classpath += project.files(android.getBootClasspath().join(File.pathSeparator))
+    classpath += project.files(configurations.compile.files,android.getBootClasspath().join(File.pathSeparator))
+    failOnError false
 }
+
+//
+//task javadoc(type: Javadoc) {
+//    source = android.sourceSets.main.java.srcDirs
+////    classpath += project.files(android.getBootClasspath().join(File.pathSeparator))
+////    source = android.sourceSets.main.java.srcDirs
+//}
+
 
 task javadocJar(type: Jar, dependsOn: javadoc) {
     classifier = 'javadoc'

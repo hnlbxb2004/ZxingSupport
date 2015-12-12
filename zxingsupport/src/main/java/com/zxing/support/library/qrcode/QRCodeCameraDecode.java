@@ -1,5 +1,7 @@
 package com.zxing.support.library.qrcode;
 
+import android.graphics.Bitmap;
+import android.os.Bundle;
 import android.util.Log;
 
 import com.google.zxing.BarcodeFormat;
@@ -13,6 +15,8 @@ import com.google.zxing.ResultPointCallback;
 import com.google.zxing.common.HybridBinarizer;
 import com.zxing.support.library.camera.CameraManager;
 
+import java.io.ByteArrayOutputStream;
+import java.security.PublicKey;
 import java.util.Hashtable;
 import java.util.Vector;
 
@@ -53,12 +57,12 @@ public class QRCodeCameraDecode {
      *
      * @param data   The YUV preview frame.
      */
-    public Result decode(byte[] data) {
+    public CameraDecodeResult decode(byte[] data) {
         int width = mCameraManger.getCameraConfig().getCameraResolution().x;
         int height = mCameraManger.getCameraConfig().getCameraResolution().y;
         Result rawResult = null;
 
-        //modify here
+        // 这里需要将获取的data翻转一下，因为相机默认拿的的横屏的数据
         byte[] rotatedData = new byte[data.length];
         for (int y = 0; y < height; y++) {
             for (int x = 0; x < width; x++)
@@ -78,8 +82,45 @@ public class QRCodeCameraDecode {
             multiFormatReader.reset();
         }
         Log.e(TAG, "decode:" + rawResult);
+        CameraDecodeResult cameraDecodeResult = new CameraDecodeResult();
+        cameraDecodeResult.setDecodeResult(rawResult);
 
-        return rawResult;
+        if (rawResult != null){
+            cameraDecodeResult.setDecodeByte(bundleThumbnail(source));
+        }
+        return cameraDecodeResult;
+    }
+
+
+    private static byte[] bundleThumbnail(PlanarYUVLuminanceSource source) {
+        int[] pixels = source.renderThumbnail();
+        int width = source.getThumbnailWidth();
+        int height = source.getThumbnailHeight();
+        Bitmap bitmap = Bitmap.createBitmap(pixels, 0, width, width, height, Bitmap.Config.ARGB_8888);
+        ByteArrayOutputStream out = new ByteArrayOutputStream();
+        bitmap.compress(Bitmap.CompressFormat.JPEG, 50, out);
+        return  out.toByteArray();
+    }
+
+    public static class CameraDecodeResult{
+        private Result decodeResult;
+        private byte[] decodeByte;
+
+        public Result getDecodeResult() {
+            return decodeResult;
+        }
+
+        public void setDecodeResult(Result decodeResult) {
+            this.decodeResult = decodeResult;
+        }
+
+        public byte[] getDecodeByte() {
+            return decodeByte;
+        }
+
+        public void setDecodeByte(byte[] decodeByte) {
+            this.decodeByte = decodeByte;
+        }
     }
 
 }
