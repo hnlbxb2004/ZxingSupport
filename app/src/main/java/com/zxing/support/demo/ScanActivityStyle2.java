@@ -47,7 +47,7 @@ public class ScanActivityStyle2 extends AppCompatActivity implements QRCodeSuppo
     public void onScanResult(String notNullResult,byte[] resultBytes) {
         Intent intent = new Intent();
         intent.putExtra("result", notNullResult);
-        intent.putExtra("resultByte",comp);
+        intent.putExtra("resultByte",resultBytes);
         setResult(Activity.RESULT_OK, intent);
         finish();
     }
