@@ -66,4 +66,4 @@
     本库借鉴了很多前辈的代码,但是由于历史原因,之前未加借鉴出处,现在也找到不了,如果你认为我是借鉴你代码,请联系我.
     感谢:
     1.适配屏幕的代码,借鉴了此库,在此感谢.
-    https://github.com/SkillCollege/ZXingProject/tree/master/ZXingProj/src/com/dtr/zxing
+    [点击查看](https://github.com/SkillCollege/ZXingProject/tree/master/ZXingProj/src/com/dtr/zxing)
