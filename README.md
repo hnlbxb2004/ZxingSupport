@@ -17,7 +17,7 @@
     //设计监听
     2.mQRCodeSupport.setScanResultListener(new QRCodeSupport.OnScanResultListener(){
                                                 @Override
-                                                public void onScanResult(String notNullResult) {
+                                                public void onScanResult(String notNullResult,byte[] resultBytes) {
 
                                                 }
                                            };);
