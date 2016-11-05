@@ -1,6 +1,6 @@
 #ZxingSupport
 
-    简介：这个是对Zxing 库的二次封装，使用起来相当简单。
+    简介：这个是对Zxing 库的二次封装，使用起来相当简单,支持横竖屏。
 
 ![图片描述](./tools/device-2015-09-23-142035.png)
 
@@ -27,7 +27,7 @@
     2.mQRCodeSupport.setScanResultListener(new QRCodeSupport.OnScanResultListener(){
                                                 @Override
                                                 public void onScanResult(String notNullResult,byte[] resultBytes) {
-
+                                                    //此处监听只要扫到就会一直回掉，比如1秒扫了2次，那么回掉会执行2次，需要注意。
                                                 }
                                            };);
 
