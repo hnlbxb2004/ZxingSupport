@@ -1,19 +1,22 @@
 package com.zxing.support.library.camera;
 
+import android.annotation.TargetApi;
+import android.app.Activity;
 import android.content.Context;
 import android.graphics.Point;
 import android.hardware.Camera;
 import android.os.Build;
 import android.util.Log;
-import android.view.Display;
-import android.view.WindowManager;
+import android.view.Surface;
 
 import com.google.zxing.client.android.camera.CameraConfigurationUtils;
+import com.zxing.support.library.utils.DeviceUtils;
 
 import java.util.regex.Pattern;
 
 /**
  * 照相机的一些基本配置
+ *
  * @author bingbing
  * @date 15/9/22
  */
@@ -39,68 +42,71 @@ public class CameraConfig {
         this.mContext = context;
     }
 
-    public void configCamera(Camera camera) {
+    public void configCamera(Camera camera, int width, int height, int rotation) {
         // 注意：此设置不会影响到PreviewCallback回调、及其生成的Bitmap图片的数据方向，
-        camera.setDisplayOrientation(90);
-        initFromCameraParameters(camera);
-        setDesiredCameraParameters(camera);
+        measureCameraPreviewSize(camera, width, height, rotation);
+        setCameraDisplayOrientation(camera, rotation);
+        setDesiredCameraParameters(camera, rotation);
     }
 
 
     /**
-     * 初始化参数从照相机 只执行一次
+     * 计算屏幕的尺寸
+     *
      * @param camera
      */
-    private void initFromCameraParameters(Camera camera) {
-        if (!initialized){
-            initialized = true;
-            Camera.Parameters parameters = camera.getParameters();
-            previewFormat = parameters.getPreviewFormat();
-            previewFormatString = parameters.get("preview-format");
-            Log.d(TAG, "Default preview format: " + previewFormat + '/' + previewFormatString);
-            WindowManager manager = (WindowManager) mContext.getSystemService(Context.WINDOW_SERVICE);
-            Display display = manager.getDefaultDisplay();
-            screenResolution = new Point(display.getWidth(), display.getHeight());
-            Log.d(TAG, "Screen resolution: " + screenResolution);
+    private void measureCameraPreviewSize(Camera camera, int width, int height, int rotation) {
+        Camera.Parameters parameters = camera.getParameters();
+        previewFormat = parameters.getPreviewFormat();
+        previewFormatString = parameters.get("preview-format");
+        Log.d(TAG, "Default preview format: " + previewFormat + '/' + previewFormatString);
 
-            /** 因为换成了竖屏显示，所以不替换屏幕宽高得出的预览图是变形的 */
-            Point screenResolutionForCamera = new Point();
-            screenResolutionForCamera.x = screenResolution.x;
-            screenResolutionForCamera.y = screenResolution.y;
+        screenResolution = DeviceUtils.getScreenSize(mContext);
+        Log.d(TAG, "Screen resolution: " + screenResolution);
 
-            if (screenResolution.x < screenResolution.y) {
-                screenResolutionForCamera.x = screenResolution.y;
-                screenResolutionForCamera.y = screenResolution.x;
-            }
+        Point screenResolutionForCamera = new Point();
+        screenResolutionForCamera.x = width;
+        screenResolutionForCamera.y = height;
 
-            cameraResolution = CameraConfigurationUtils.findBestPreviewSizeValue(parameters, screenResolutionForCamera);
-            Log.d(TAG, "Camera resolution: " + cameraResolution);
-        }
+        //根据view 的分辨率，计算出相机最适合的分辨率
+
+        cameraResolution = CameraConfigurationUtils.findBestPreviewSizeValue(parameters, screenResolutionForCamera);
+
+        Log.d(TAG, "Camera resolution: " + cameraResolution);
     }
 
     /**
-     * 设置照相机
+     * 设置照相机各个参数
+     *
      * @param camera
      */
-    private void setDesiredCameraParameters(Camera camera) {
+    private void setDesiredCameraParameters(Camera camera, int rotation) {
         Camera.Parameters parameters = camera.getParameters();
         Log.d(TAG, "Setting preview size: " + cameraResolution);
         parameters.setPreviewSize(cameraResolution.x, cameraResolution.y);
         setFlash(parameters);
         setZoom(parameters);
-        //setSharpness(parameters);
-        //modify here
-        camera.setDisplayOrientation(90);
         camera.setParameters(parameters);
     }
 
 
+    @TargetApi(Build.VERSION_CODES.GINGERBREAD)
+    public static void setCameraDisplayOrientation(android.hardware.Camera camera,int rotation) {
+        android.hardware.Camera.CameraInfo info = new android.hardware.Camera.CameraInfo();
+        android.hardware.Camera.getCameraInfo(Camera.CameraInfo.CAMERA_FACING_BACK, info);
+
+        int result;
+        if (info.facing == Camera.CameraInfo.CAMERA_FACING_FRONT) {
+            result = (info.orientation + rotation) % 360;
+            result = (360 - result) % 360;  // compensate the mirror
+        } else {  // back-facing
+            result = (info.orientation - rotation + 360) % 360;
+        }
+        camera.setDisplayOrientation(result);
+    }
+
+
     private void setFlash(Camera.Parameters parameters) {
-        // FIXME: This is a hack to turn the flash off on the Samsung Galaxy.
-        // And this is a hack-hack to work around a different value on the Behold II
-        // Restrict Behold II check to Cupcake, per Samsung's advice
-        //if (Build.MODEL.contains("Behold II") &&
-        //    CameraManager.SDK_INT == Build.VERSION_CODES.CUPCAKE) {
         if (Build.MODEL.contains("Behold II") && CameraManager.SDK_INT == 3) { // 3 = Cupcake
             parameters.set("flash-value", 1);
         } else {
@@ -111,7 +117,7 @@ public class CameraConfig {
     }
 
 
-    private void setZoom(Camera.Parameters parameters){
+    private void setZoom(Camera.Parameters parameters) {
 
         String zoomSupportedString = parameters.get("zoom-supported");
         if (zoomSupportedString != null && !Boolean.parseBoolean(zoomSupportedString)) {
@@ -176,7 +182,6 @@ public class CameraConfig {
     }
 
 
-
     private static int findBestMotZoomValue(CharSequence stringValues, int tenDesiredZoom) {
         int tenBestValue = 0;
         for (String stringValue : COMMA_PATTERN.split(stringValues)) {
@@ -197,6 +202,7 @@ public class CameraConfig {
 
     /**
      * 获取照相机的分辨率
+     *
      * @return
      */
     public Point getCameraResolution() {

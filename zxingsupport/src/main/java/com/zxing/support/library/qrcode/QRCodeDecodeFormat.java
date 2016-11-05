@@ -44,6 +44,8 @@ public final class QRCodeDecodeFormat {
         ONE_D_FORMATS.add(BarcodeFormat.ITF);
         QR_CODE_FORMATS = new Vector<BarcodeFormat>(1);
         QR_CODE_FORMATS.add(BarcodeFormat.QR_CODE);
+        QR_CODE_FORMATS.add(BarcodeFormat.DATA_MATRIX);
+
 
 
         DATA_MATRIX_FORMATS = new Vector<BarcodeFormat>(1);

@@ -57,22 +57,26 @@ public class QRCodeCameraDecode {
      *
      * @param data   The YUV preview frame.
      */
-    public CameraDecodeResult decode(byte[] data) {
+    public CameraDecodeResult decode(byte[] data,boolean horizontal) {
         int width = mCameraManger.getCameraConfig().getCameraResolution().x;
         int height = mCameraManger.getCameraConfig().getCameraResolution().y;
         Result rawResult = null;
 
-        // 这里需要将获取的data翻转一下，因为相机默认拿的的横屏的数据
-        byte[] rotatedData = new byte[data.length];
-        for (int y = 0; y < height; y++) {
-            for (int x = 0; x < width; x++)
-                rotatedData[x * height + height - y - 1] = data[x + y * width];
+        if (!horizontal){
+            // 这里需要将获取的data翻转一下，因为相机默认拿的的横屏的数据
+            byte[] rotatedData = new byte[data.length];
+            for (int y = 0; y < height; y++) {
+                for (int x = 0; x < width; x++)
+                    rotatedData[x * height + height - y - 1] = data[x + y * width];
+            }
+            int tmp = width; // Here we are swapping, that's the difference to #11
+            width = height;
+            height = tmp;
+            data= rotatedData;
         }
-        int tmp = width; // Here we are swapping, that's the difference to #11
-        width = height;
-        height = tmp;
 
-        PlanarYUVLuminanceSource source = mCameraManger.buildLuminanceSource(rotatedData, width, height);
+
+        PlanarYUVLuminanceSource source = mCameraManger.buildLuminanceSource(data, width, height,horizontal);
         BinaryBitmap bitmap = new BinaryBitmap(new HybridBinarizer(source));
         try {
             rawResult = multiFormatReader.decodeWithState(bitmap);
@@ -86,8 +90,10 @@ public class QRCodeCameraDecode {
         cameraDecodeResult.setDecodeResult(rawResult);
 
         if (rawResult != null){
-            cameraDecodeResult.setDecodeByte(bundleThumbnail(source));
+            // TODO: 2016/11/5
+//            cameraDecodeResult.setDecodeByte(bundleThumbnail(source));
         }
+        cameraDecodeResult.setDecodeByte(bundleThumbnail(source));
         return cameraDecodeResult;
     }
 

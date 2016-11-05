@@ -10,25 +10,22 @@ import android.util.Log;
 import android.view.SurfaceHolder;
 
 import com.google.zxing.PlanarYUVLuminanceSource;
+import com.zxing.support.library.QRCodeSupport;
 
 import java.io.IOException;
 
 
 /**
  * 照相机的管理类
+ *
  * @author bingbing
  * @date 15/9/22
  */
 public class CameraManager {
 
     private static final String TAG = CameraManager.class.getSimpleName();
-
-    private static final int MIN_FRAME_WIDTH = 240;
-    private static final int MIN_FRAME_HEIGHT = 240;
-    private static final int MAX_FRAME_WIDTH = 675;
-    private static final int MAX_FRAME_HEIGHT = 675;
-
     static final int SDK_INT;
+
     static {
         int sdkInt;
         try {
@@ -47,22 +44,24 @@ public class CameraManager {
 
     private Rect framingRectInPreview;
     private Rect framingRect;
+    private QRCodeSupport.Builder mBuidler;
 
-    public CameraManager(Context context) {
+    public CameraManager(QRCodeSupport.Builder builder, Context context) {
         this.mContext = context;
+        this.mBuidler = builder;
         mCameraConfig = new CameraConfig(context);
         mAutoFucesManager = new AutoFucesManager();
     }
 
 
-
-    public CameraConfig getCameraConfig(){
+    public CameraConfig getCameraConfig() {
         return mCameraConfig;
     }
 
 
     /**
      * 相机是否打开
+     *
      * @return
      */
     public boolean isOpen() {
@@ -71,28 +70,36 @@ public class CameraManager {
 
     /**
      * 打开相机
-     * @param surfaceHolder
+     *
+     * @throws IOException
      */
-    public void openDevice(SurfaceHolder surfaceHolder) throws IOException {
-        if (mCamera == null){
+    public void openDevice() throws IOException {
+        if (mCamera == null) {
             mCamera = Camera.open();
-            if (mCamera == null) throw  new IOException();
-
-            mCamera.setPreviewDisplay(surfaceHolder);
-            mCameraConfig.configCamera(mCamera);
-            mAutoFucesManager.setCamera(mCamera);
-
+            if (mCamera == null) throw new IOException("camera not open");
         }
-
     }
+
+    public void initCameraParameter(SurfaceHolder surfaceHolder, int width, int height, int rotation) {
+        if (mCamera == null) return;
+
+        try {
+            mCameraConfig.configCamera(mCamera, width, height, rotation);
+            mCamera.setPreviewDisplay(surfaceHolder);
+            mAutoFucesManager.setCamera(mCamera);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
 
     /**
      * 停止预览
      */
     public void stopPreview() {
-        if (mCamera != null){
-            mCamera.stopPreview();
+        if (mCamera != null) {
             mAutoFucesManager.stop();
+            mCamera.stopPreview();
         }
     }
 
@@ -100,7 +107,7 @@ public class CameraManager {
      * 关闭设备
      */
     public void closeDriver() {
-        if (mCamera != null){
+        if (mCamera != null) {
             mCamera.release();
             mCamera = null;
         }
@@ -108,74 +115,64 @@ public class CameraManager {
 
     /**
      * 响应预览图像
+     *
      * @param previewCallback
      */
     public void requestPreview(Camera.PreviewCallback previewCallback) {
-        mCamera.setOneShotPreviewCallback(previewCallback);
+        if (mCamera != null)
+            mCamera.setOneShotPreviewCallback(previewCallback);
     }
 
     /**
      * 开始预览
      */
     public void startPreview() {
-        mCamera.startPreview();
+        if (mCamera != null)
+            mCamera.startPreview();
     }
 
-    public void setAutoFucesListener(AutoFucesListener autoFucesListener){
+    public void setAutoFucesListener(AutoFucesListener autoFucesListener) {
         mAutoFucesManager.start(autoFucesListener);
     }
 
-    public Rect getFramingRectInPreview() {
-        if (framingRectInPreview == null) {
-            Rect rect = new Rect(getFramingRect());
-            Point cameraResolution = mCameraConfig.getCameraResolution();
-            Point screenResolution = mCameraConfig.getScreenResolution();
-            //modify here
-//      rect.left = rect.left * cameraResolution.x / screenResolution.x;
-//      rect.right = rect.right * cameraResolution.x / screenResolution.x;
-//      rect.top = rect.top * cameraResolution.y / screenResolution.y;
-//      rect.bottom = rect.bottom * cameraResolution.y / screenResolution.y;
+    public Rect getFramingRectInPreview(boolean horizontal) {
+        Rect rect = new Rect(getFramingRect());
+        Point cameraResolution = mCameraConfig.getCameraResolution();
+        Point screenResolution = mCameraConfig.getScreenResolution();
+
+        if (horizontal){
+            rect.left = rect.left * cameraResolution.x / screenResolution.x;
+            rect.right = rect.right * cameraResolution.x / screenResolution.x;
+            rect.top = rect.top * cameraResolution.y / screenResolution.y;
+            rect.bottom = rect.bottom * cameraResolution.y / screenResolution.y;
+
+        }else {
             rect.left = rect.left * cameraResolution.y / screenResolution.x;
             rect.right = rect.right * cameraResolution.y / screenResolution.x;
             rect.top = rect.top * cameraResolution.x / screenResolution.y;
             rect.bottom = rect.bottom * cameraResolution.x / screenResolution.y;
-            framingRectInPreview = rect;
-            Log.e(TAG,"cameraResolution:"+cameraResolution.toString());
-            Log.e(TAG,"screenResolution:"+screenResolution.toString());
-            Log.e(TAG,"framingRectInPreview:"+framingRectInPreview.toString());
+
         }
+
+
+        framingRectInPreview = rect;
+        Log.e(TAG, "cameraResolution:" + cameraResolution.toString());
+        Log.e(TAG, "screenResolution:" + screenResolution.toString());
+        Log.e(TAG, "framingRectInPreview:" + framingRectInPreview.toString());
         return framingRectInPreview;
     }
 
     public Rect getFramingRect() {
-        Point screenResolution = mCameraConfig.getScreenResolution();
-        if (framingRect == null) {
-            if (mCamera == null) {
-                return null;
-            }
-            int width = screenResolution.x * 3 / 4;
-            if (width < MIN_FRAME_WIDTH) {
-                width = MIN_FRAME_WIDTH;
-            } else if (width > MAX_FRAME_WIDTH) {
-                width = MAX_FRAME_WIDTH;
-            }
-            int height = screenResolution.y * 3 / 4;
-            if (height < MIN_FRAME_HEIGHT) {
-                height = MIN_FRAME_HEIGHT;
-            } else if (height > MAX_FRAME_HEIGHT) {
-                height = MAX_FRAME_HEIGHT;
-            }
-            int leftOffset = (screenResolution.x - width) / 2;
-            int topOffset = (screenResolution.y - height) / 2;
-            framingRect = new Rect(leftOffset, topOffset, leftOffset + width, topOffset + height);
-            Log.d(TAG, "Calculated framing rect: " + framingRect);
-        }
+        framingRect = new Rect(mBuidler.getScanRectLeft()
+                , mBuidler.getScanRectTop()
+                , mBuidler.getScanRectLeft() + mBuidler.getScanRectWidth()
+                , mBuidler.getScanRectTop() + mBuidler.getScanRectHeight());
+        Log.d(TAG, "Calculated framing rect: " + framingRect);
         return framingRect;
     }
 
-
-    public PlanarYUVLuminanceSource buildLuminanceSource(byte[] rotatedData, int width, int height) {
-        Rect rect = getFramingRectInPreview();
+    public PlanarYUVLuminanceSource buildLuminanceSource(byte[] rotatedData, int width, int height, boolean horizontal) {
+        Rect rect = getFramingRectInPreview(horizontal);
         int previewFormat = mCameraConfig.getPreviewFormat();
         String previewFormatString = mCameraConfig.getPreviewFormatString();
         switch (previewFormat) {
@@ -186,13 +183,13 @@ public class CameraManager {
                 // about the Y channel, so allow it.
             case PixelFormat.YCbCr_422_SP:
                 return new PlanarYUVLuminanceSource(rotatedData, width, height, rect.left, rect.top,
-                        rect.width(), rect.height(),false);
+                        rect.width(), rect.height(), horizontal);
             default:
                 // The Samsung Moment incorrectly uses this variant instead of the 'sp' version.
                 // Fortunately, it too has all the Y data up front, so we can read it.
                 if ("yuv420p".equals(previewFormatString)) {
                     return new PlanarYUVLuminanceSource(rotatedData, width, height, rect.left, rect.top,
-                            rect.width(), rect.height(),false);
+                            rect.width(), rect.height(), horizontal);
                 }
         }
         throw new IllegalArgumentException("Unsupported picture format: " +
