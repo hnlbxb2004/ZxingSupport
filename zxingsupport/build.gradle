@@ -41,7 +41,7 @@ ext {
     siteUrl = 'https://github.com/hnlbxb2004/ZxingSupport'
     gitUrl = 'https://github.com/hnlbxb2004/ZxingSupport.git'
 
-    libraryVersion = '0.6'
+    libraryVersion = '0.7'
 
     developerId = 'hnlbxb2004'
     developerName = 'xubing'
@@ -55,4 +55,4 @@ ext {
 //apply from: 'https://raw.githubusercontent.com/nuuneoi/JCenter/master/installv1.gradle'
 //apply from: 'https://raw.githubusercontent.com/nuuneoi/JCenter/master/bintrayv1.gradle'
 
-//apply from: "bintrayUpload.gradle"
+apply from: "bintrayUpload.gradle"
