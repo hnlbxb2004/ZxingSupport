@@ -89,10 +89,13 @@ public class QRCodeSupport {
 
         @Override
         public void surfaceChanged(SurfaceHolder holder, int format, int width, int height) {
+            Log.i(TAG,"surfaceChanged w:" + width + ",h:" + height);
             isPrivew = true;
-            int rotation = mBuilder.getDisplayRotation();
-
-            initCamera(holder, width, height,getDefaultDisplayOrtiation ((Activity) mSurfaceView.getContext()));
+            if (mBuilder.getPrewPreviewW() == -1 || mBuilder.getPrewPreviewH()== -1){
+                initCamera(holder, width, height,getDefaultDisplayOrtiation ((Activity) mSurfaceView.getContext()));
+            }else {
+                initCamera(holder, mBuilder.getPrewPreviewW(), mBuilder.getPrewPreviewH(),getDefaultDisplayOrtiation ((Activity) mSurfaceView.getContext()));
+            }
             mCameraManager.requestPreview(mPreviewCallback);
             mCameraManager.startPreview();
             mCameraManager.setAutoFucesListener(mAutoFucesListener);
@@ -269,6 +272,16 @@ public class QRCodeSupport {
          */
         private int displayRotation = ROTATION_AUTO;
 
+        /**
+         * 预览宽度
+         */
+        private int prewPreviewW = -1;
+
+        /**
+         * 预览高度
+         */
+        private int prewPreviewH = -1;
+
         public void setScanRect(int left, int top, int width, int height) {
             this.scanRectLeft = left;
             this.scanRectTop = top;
@@ -314,6 +327,19 @@ public class QRCodeSupport {
 
         public void setDisplayRotation(int displayRotation) {
             this.displayRotation = displayRotation;
+        }
+
+        public void setPrewPreviewW(int prewPreviewW,int prewPrwviewH) {
+            this.prewPreviewW = prewPreviewW;
+            this.prewPreviewH = prewPrwviewH;
+        }
+
+        public int getPrewPreviewW() {
+            return prewPreviewW;
+        }
+
+        public int getPrewPreviewH() {
+            return prewPreviewH;
         }
     }
 
