@@ -6,6 +6,7 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.view.Display;
 import android.view.SurfaceView;
 import android.widget.ImageView;
 
@@ -19,6 +20,9 @@ import com.zxing.support.library.view.FinderViewStyle1;
  */
 public class ScanActivityStyle1 extends AppCompatActivity implements QRCodeSupport.OnScanResultListener, QRCodeSupport.OnTestScanRectListener {
 
+    private static final int scan_w = 400;
+    private static final int scan_h = 400;
+
     private SurfaceView mSurfaceView;
     private FinderViewStyle1 mFinderView;
     private QRCodeSupport mQRCodeSupport;
@@ -28,9 +32,14 @@ public class ScanActivityStyle1 extends AppCompatActivity implements QRCodeSuppo
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_scan);
+        Display defaultDisplay = getWindowManager().getDefaultDisplay();
+        int w = defaultDisplay.getWidth();
+        int h = defaultDisplay.getHeight();
+
+
 
         QRCodeSupport.Builder builder = new QRCodeSupport.Builder();
-        builder.setScanRect(140,500,300,300);
+        builder.setScanRect((w-scan_w)/2 ,(h- scan_h)/2,scan_w,scan_h);
         mFinderView = (FinderViewStyle1) findViewById(R.id.viewfinder_view);
         mTestView = (ImageView) findViewById(R.id.test);
         mSurfaceView = (SurfaceView) findViewById(R.id.sufaceview);
@@ -38,6 +47,8 @@ public class ScanActivityStyle1 extends AppCompatActivity implements QRCodeSuppo
         mQRCodeSupport.setScanResultListener(this);
         mQRCodeSupport.setOnTestScanRectListener(this);
     }
+
+
 
 
     @Override
