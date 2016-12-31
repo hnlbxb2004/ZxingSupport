@@ -80,4 +80,9 @@ public class ScanActivityStyle2 extends AppCompatActivity implements QRCodeSuppo
         barcode = barcode.copy(Bitmap.Config.RGB_565, true);
         mTestView.setImageBitmap(barcode);
     }
+
+    @Override
+    public void onPreviewFrame(byte[] data) {
+
+    }
 }

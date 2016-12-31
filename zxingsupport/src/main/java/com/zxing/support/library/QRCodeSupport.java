@@ -10,6 +10,7 @@ import android.view.SurfaceHolder;
 import android.view.SurfaceView;
 
 import com.zxing.support.library.camera.AutoFucesListener;
+import com.zxing.support.library.camera.CameraConfig;
 import com.zxing.support.library.camera.CameraManager;
 import com.zxing.support.library.qrcode.QRCodeCameraDecode;
 import com.zxing.support.library.utils.DeviceUtils;
@@ -74,6 +75,7 @@ public class QRCodeSupport {
 
         @Override
         public void onPreviewFrame(byte[] data, Camera camera) {
+            if (mTestScanRectListener != null)mTestScanRectListener.onPreviewFrame(data);
             CameraDecodeTask mCameraDecodeTask = new CameraDecodeTask();
             boolean isOrtation =getDefaultOrtation((Activity) mSurfaceView.getContext());
             byte[] oranation = new byte[]{(byte) (isOrtation ? 1 : 0)};
@@ -91,11 +93,15 @@ public class QRCodeSupport {
         public void surfaceChanged(SurfaceHolder holder, int format, int width, int height) {
             Log.i(TAG,"surfaceChanged w:" + width + ",h:" + height);
             isPrivew = true;
+            CameraConfig.Size surfaceViewSize = new CameraConfig.Size(width,height);
+            CameraConfig.Size cameraSize;
             if (mBuilder.getPrewPreviewW() == -1 || mBuilder.getPrewPreviewH()== -1){
-                initCamera(holder, width, height,getDefaultDisplayOrtiation ((Activity) mSurfaceView.getContext()));
+                cameraSize = new CameraConfig.Size(width, height);
             }else {
-                initCamera(holder, mBuilder.getPrewPreviewW(), mBuilder.getPrewPreviewH(),getDefaultDisplayOrtiation ((Activity) mSurfaceView.getContext()));
+                cameraSize = new CameraConfig.Size( mBuilder.getPrewPreviewW(), mBuilder.getPrewPreviewH());
             }
+
+            initCamera(holder,cameraSize,surfaceViewSize,getDefaultDisplayOrtiation ((Activity) mSurfaceView.getContext()));
             mCameraManager.requestPreview(mPreviewCallback);
             mCameraManager.startPreview();
             mCameraManager.setAutoFucesListener(mAutoFucesListener);
@@ -137,8 +143,8 @@ public class QRCodeSupport {
     }
 
 
-    public void initCamera(SurfaceHolder surfaceHolder, int width, int height, int rotation) {
-        mCameraManager.initCameraParameter(surfaceHolder, width, height, rotation);
+    public void initCamera(SurfaceHolder surfaceHolder, CameraConfig.Size cameraSize, CameraConfig.Size surfaceViewSize, int rotation) {
+        mCameraManager.initCameraParameter(surfaceHolder, cameraSize, surfaceViewSize, rotation);
     }
 
     /**
@@ -226,6 +232,12 @@ public class QRCodeSupport {
          * @param rectByte
          */
         void onScanRect(byte[] rectByte);
+
+        /**
+         * 相机预览的元数据
+         * @param data
+         */
+        void onPreviewFrame(byte[] data);
     }
 
 

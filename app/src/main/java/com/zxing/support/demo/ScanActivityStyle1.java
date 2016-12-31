@@ -40,6 +40,8 @@ public class ScanActivityStyle1 extends AppCompatActivity implements QRCodeSuppo
 
         QRCodeSupport.Builder builder = new QRCodeSupport.Builder();
         builder.setScanRect((w-scan_w)/2 ,(h- scan_h)/2,scan_w,scan_h);
+        builder.setPrewPreviewW(1920,1088);
+        builder.setDisplayRotation(90);
         mFinderView = (FinderViewStyle1) findViewById(R.id.viewfinder_view);
         mTestView = (ImageView) findViewById(R.id.test);
         mSurfaceView = (SurfaceView) findViewById(R.id.sufaceview);
@@ -84,5 +86,10 @@ public class ScanActivityStyle1 extends AppCompatActivity implements QRCodeSuppo
         Bitmap barcode = BitmapFactory.decodeByteArray(rectByte, 0, rectByte.length, null);
         barcode = barcode.copy(Bitmap.Config.RGB_565, true);
         mTestView.setImageBitmap(barcode);
+    }
+
+    @Override
+    public void onPreviewFrame(byte[] data) {
+
     }
 }
