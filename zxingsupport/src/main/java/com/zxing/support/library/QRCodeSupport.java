@@ -1,7 +1,6 @@
 package com.zxing.support.library;
 
 import android.app.Activity;
-import android.content.Context;
 import android.hardware.Camera;
 import android.os.AsyncTask;
 import android.text.TextUtils;
@@ -77,7 +76,7 @@ public class QRCodeSupport {
         public void onPreviewFrame(byte[] data, Camera camera) {
             if (mTestScanRectListener != null)mTestScanRectListener.onPreviewFrame(data);
             CameraDecodeTask mCameraDecodeTask = new CameraDecodeTask();
-            boolean isOrtation =getDefaultOrtation((Activity) mSurfaceView.getContext());
+            boolean isOrtation = DeviceUtils.isOrtation((Activity) mSurfaceView.getContext());
             byte[] oranation = new byte[]{(byte) (isOrtation ? 1 : 0)};
             mCameraDecodeTask.execute(data, oranation);
         }
@@ -93,6 +92,7 @@ public class QRCodeSupport {
         public void surfaceChanged(SurfaceHolder holder, int format, int width, int height) {
             Log.i(TAG,"surfaceChanged w:" + width + ",h:" + height);
             isPrivew = true;
+<<<<<<< HEAD
             CameraConfig.Size surfaceViewSize = new CameraConfig.Size(width,height);
             CameraConfig.Size cameraSize;
             if (mBuilder.getPrewPreviewW() == -1 || mBuilder.getPrewPreviewH()== -1){
@@ -102,6 +102,9 @@ public class QRCodeSupport {
             }
 
             initCamera(holder,cameraSize,surfaceViewSize,getDefaultDisplayOrtiation ((Activity) mSurfaceView.getContext()));
+=======
+            initCamera(holder, width, height, DeviceUtils.getDisplayRotation((Activity) (mSurfaceView.getContext())));
+>>>>>>> parent of 998c249... 更新demo
             mCameraManager.requestPreview(mPreviewCallback);
             mCameraManager.startPreview();
             mCameraManager.setAutoFucesListener(mAutoFucesListener);
@@ -115,18 +118,6 @@ public class QRCodeSupport {
         }
     };
 
-
-    private int getDefaultDisplayOrtiation(Activity activity){
-        int ortation = mBuilder.getDisplayRotation();
-        if (ortation == Builder.ROTATION_AUTO){
-            return DeviceUtils.getDisplayRotation(activity);
-        }
-        return ortation;
-    }
-
-    private boolean getDefaultOrtation(Activity activity){
-        return DeviceUtils.isOrtation(getDefaultDisplayOrtiation(activity));
-    }
 
     private void openCamera() {
         if (mCameraManager.isOpen()) {
@@ -252,12 +243,6 @@ public class QRCodeSupport {
 
 
     public static class Builder {
-        public static final int ROTATION_AUTO = -1;
-        public static final int ROTATION_0 = 0;
-        public static final int ROTATION_90 = 90;
-        public static final int ROTATION_180 = 180;
-        public static final int ROTATION_270 = 270;
-
         /**
          * 扫描区域距离屏幕左边的距离
          */
@@ -278,6 +263,7 @@ public class QRCodeSupport {
          */
         private int scanRectHeight;
 
+<<<<<<< HEAD
         /**
          * 屏幕旋转的方向
          * 0表示是竖屏; 90表示是左横屏; 180表示是反向竖屏; 270表示是右横屏
@@ -294,6 +280,8 @@ public class QRCodeSupport {
          */
         private int prewPreviewH = -1;
 
+=======
+>>>>>>> parent of 998c249... 更新demo
         public void setScanRect(int left, int top, int width, int height) {
             this.scanRectLeft = left;
             this.scanRectTop = top;
@@ -316,6 +304,7 @@ public class QRCodeSupport {
         public int getScanRectHeight() {
             return scanRectHeight;
         }
+<<<<<<< HEAD
 
         public void setScanRectLeft(int scanRectLeft) {
             this.scanRectLeft = scanRectLeft;
@@ -353,6 +342,8 @@ public class QRCodeSupport {
         public int getPrewPreviewH() {
             return prewPreviewH;
         }
+=======
+>>>>>>> parent of 998c249... 更新demo
     }
 
 }

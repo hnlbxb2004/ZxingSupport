@@ -23,7 +23,8 @@ public class DeviceUtils {
         if(activity == null)
             return 0;
 
-        int rotation = activity.getWindowManager().getDefaultDisplay().getRotation();
+        int rotation = activity.getWindowManager().getDefaultDisplay()
+                .getRotation();
         switch (rotation) {
             case Surface.ROTATION_0:
                 return 0;
@@ -37,17 +38,9 @@ public class DeviceUtils {
         return 0;
     }
 
-
-
-
-
     public static boolean isOrtation(Activity activity){
         int rotation = getDisplayRotation(activity);
-        return isOrtation(rotation);
-    }
-
-    public static boolean isOrtation(int displayRotation){
-        if (displayRotation == 0 || displayRotation == 180){
+        if (rotation == 0 || rotation == 180){
             return false;
         }else {
             return true;
