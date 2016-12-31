@@ -1,4 +1,4 @@
-package com.zxing.support.library.view;
+package com.zxing.support.demo.view;
 
 import android.content.Context;
 import android.content.res.Resources;
@@ -13,8 +13,9 @@ import android.util.AttributeSet;
 import android.view.View;
 
 import com.google.zxing.ResultPoint;
-import com.zxing.support.library.R;
+import com.zxing.support.demo.R;
 import com.zxing.support.library.camera.CameraManager;
+import com.zxing.support.library.view.QRCodeFindView;
 
 
 /**
@@ -26,7 +27,7 @@ import com.zxing.support.library.camera.CameraManager;
  *
  *
  */
-public final class FinderViewStyle2 extends View implements QRCodeFindView{
+public final class FinderViewStyle2 extends View implements QRCodeFindView {
 
 	private static final long ANIMATION_DELAY = 10L;
 	private static final int OPAQUE = 0xFF;

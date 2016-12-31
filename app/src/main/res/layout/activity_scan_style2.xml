@@ -8,7 +8,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent" />
 
-    <com.zxing.support.library.view.FinderViewStyle2
+    <com.zxing.support.demo.view.FinderViewStyle2
         android:id="@+id/capture_viewfinder_view"
         android:layout_width="match_parent"
         android:layout_height="match_parent"

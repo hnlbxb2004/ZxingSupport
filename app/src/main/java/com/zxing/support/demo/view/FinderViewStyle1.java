@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.zxing.support.library.view;
+package com.zxing.support.demo.view;
 
 import android.content.Context;
 import android.content.res.Resources;
@@ -28,6 +28,7 @@ import android.view.View;
 import com.google.zxing.ResultPoint;
 import com.zxing.support.library.R;
 import com.zxing.support.library.camera.CameraManager;
+import com.zxing.support.library.view.QRCodeFindView;
 
 import java.util.Collection;
 import java.util.HashSet;

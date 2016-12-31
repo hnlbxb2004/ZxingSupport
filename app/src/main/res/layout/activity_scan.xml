@@ -9,7 +9,7 @@
         android:layout_height="match_parent" />
 
 
-    <com.zxing.support.library.view.FinderViewStyle1
+    <com.zxing.support.demo.view.FinderViewStyle1
         android:id="@+id/viewfinder_view"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content" />

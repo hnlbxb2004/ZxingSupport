@@ -11,7 +11,7 @@ import android.view.SurfaceView;
 import android.widget.ImageView;
 
 import com.zxing.support.library.QRCodeSupport;
-import com.zxing.support.library.view.FinderViewStyle1;
+import com.zxing.support.demo.view.FinderViewStyle1;
 
 
 /**
