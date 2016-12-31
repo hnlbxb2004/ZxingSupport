@@ -9,7 +9,6 @@ import android.view.SurfaceHolder;
 import android.view.SurfaceView;
 
 import com.zxing.support.library.camera.AutoFucesListener;
-import com.zxing.support.library.camera.CameraConfig;
 import com.zxing.support.library.camera.CameraManager;
 import com.zxing.support.library.qrcode.QRCodeCameraDecode;
 import com.zxing.support.library.utils.DeviceUtils;
@@ -74,7 +73,6 @@ public class QRCodeSupport {
 
         @Override
         public void onPreviewFrame(byte[] data, Camera camera) {
-            if (mTestScanRectListener != null)mTestScanRectListener.onPreviewFrame(data);
             CameraDecodeTask mCameraDecodeTask = new CameraDecodeTask();
             boolean isOrtation = DeviceUtils.isOrtation((Activity) mSurfaceView.getContext());
             byte[] oranation = new byte[]{(byte) (isOrtation ? 1 : 0)};
@@ -90,21 +88,8 @@ public class QRCodeSupport {
 
         @Override
         public void surfaceChanged(SurfaceHolder holder, int format, int width, int height) {
-            Log.i(TAG,"surfaceChanged w:" + width + ",h:" + height);
             isPrivew = true;
-<<<<<<< HEAD
-            CameraConfig.Size surfaceViewSize = new CameraConfig.Size(width,height);
-            CameraConfig.Size cameraSize;
-            if (mBuilder.getPrewPreviewW() == -1 || mBuilder.getPrewPreviewH()== -1){
-                cameraSize = new CameraConfig.Size(width, height);
-            }else {
-                cameraSize = new CameraConfig.Size( mBuilder.getPrewPreviewW(), mBuilder.getPrewPreviewH());
-            }
-
-            initCamera(holder,cameraSize,surfaceViewSize,getDefaultDisplayOrtiation ((Activity) mSurfaceView.getContext()));
-=======
             initCamera(holder, width, height, DeviceUtils.getDisplayRotation((Activity) (mSurfaceView.getContext())));
->>>>>>> parent of 998c249... 更新demo
             mCameraManager.requestPreview(mPreviewCallback);
             mCameraManager.startPreview();
             mCameraManager.setAutoFucesListener(mAutoFucesListener);
@@ -134,8 +119,8 @@ public class QRCodeSupport {
     }
 
 
-    public void initCamera(SurfaceHolder surfaceHolder, CameraConfig.Size cameraSize, CameraConfig.Size surfaceViewSize, int rotation) {
-        mCameraManager.initCameraParameter(surfaceHolder, cameraSize, surfaceViewSize, rotation);
+    public void initCamera(SurfaceHolder surfaceHolder, int width, int height, int rotation) {
+        mCameraManager.initCameraParameter(surfaceHolder, width, height, rotation);
     }
 
     /**
@@ -223,12 +208,6 @@ public class QRCodeSupport {
          * @param rectByte
          */
         void onScanRect(byte[] rectByte);
-
-        /**
-         * 相机预览的元数据
-         * @param data
-         */
-        void onPreviewFrame(byte[] data);
     }
 
 
@@ -263,25 +242,6 @@ public class QRCodeSupport {
          */
         private int scanRectHeight;
 
-<<<<<<< HEAD
-        /**
-         * 屏幕旋转的方向
-         * 0表示是竖屏; 90表示是左横屏; 180表示是反向竖屏; 270表示是右横屏
-         */
-        private int displayRotation = ROTATION_AUTO;
-
-        /**
-         * 预览宽度
-         */
-        private int prewPreviewW = -1;
-
-        /**
-         * 预览高度
-         */
-        private int prewPreviewH = -1;
-
-=======
->>>>>>> parent of 998c249... 更新demo
         public void setScanRect(int left, int top, int width, int height) {
             this.scanRectLeft = left;
             this.scanRectTop = top;
@@ -304,46 +264,6 @@ public class QRCodeSupport {
         public int getScanRectHeight() {
             return scanRectHeight;
         }
-<<<<<<< HEAD
-
-        public void setScanRectLeft(int scanRectLeft) {
-            this.scanRectLeft = scanRectLeft;
-        }
-
-        public void setScanRectTop(int scanRectTop) {
-            this.scanRectTop = scanRectTop;
-        }
-
-        public void setScanRectWidth(int scanRectWidth) {
-            this.scanRectWidth = scanRectWidth;
-        }
-
-        public void setScanRectHeight(int scanRectHeight) {
-            this.scanRectHeight = scanRectHeight;
-        }
-
-        public int getDisplayRotation() {
-            return displayRotation;
-        }
-
-        public void setDisplayRotation(int displayRotation) {
-            this.displayRotation = displayRotation;
-        }
-
-        public void setPrewPreviewW(int prewPreviewW,int prewPrwviewH) {
-            this.prewPreviewW = prewPreviewW;
-            this.prewPreviewH = prewPrwviewH;
-        }
-
-        public int getPrewPreviewW() {
-            return prewPreviewW;
-        }
-
-        public int getPrewPreviewH() {
-            return prewPreviewH;
-        }
-=======
->>>>>>> parent of 998c249... 更新demo
     }
 
 }
