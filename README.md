@@ -50,6 +50,9 @@
               mQRCodeSupport.onDestory();
            }
 
+##扫码闪光灯打开关闭
+    mQrcodeSupport.toggleFlashLight();
+
 
 
 ##二维码生成
@@ -62,7 +65,6 @@
     Bitmap qrCodeBitmap = builder.build().encode("www.baidu.com");
 
 
-
 ##Demo 下载地址
 
 
@@ -71,6 +73,8 @@
 
 
 ## 更新:
+    2017.04.24
+       增加闪光灯切换
     2016.12.30
        将FindView 从sdk 中删除，放到Demo 工程中，方便自定义。
     2016.11.05

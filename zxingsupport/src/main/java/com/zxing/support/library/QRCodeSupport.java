@@ -269,7 +269,7 @@ public class QRCodeSupport {
     /**
      * 切换相机闪光灯.
      *
-     * @return
+     * @return true 代表切换成功.
      */
     public boolean toggleFlashLight() {
         return mCameraManager.toggleFlashLight();
