@@ -140,13 +140,13 @@ public class CameraManager {
         Point cameraResolution = mCameraConfig.getCameraResolution();
         Point screenResolution = mCameraConfig.getScreenResolution();
 
-        if (horizontal){
+        if (horizontal) {
             rect.left = rect.left * cameraResolution.x / screenResolution.x;
             rect.right = rect.right * cameraResolution.x / screenResolution.x;
             rect.top = rect.top * cameraResolution.y / screenResolution.y;
             rect.bottom = rect.bottom * cameraResolution.y / screenResolution.y;
 
-        }else {
+        } else {
             rect.left = rect.left * cameraResolution.y / screenResolution.x;
             rect.right = rect.right * cameraResolution.y / screenResolution.x;
             rect.top = rect.top * cameraResolution.x / screenResolution.y;
@@ -195,6 +195,48 @@ public class CameraManager {
         throw new IllegalArgumentException("Unsupported picture format: " +
                 previewFormat + '/' + previewFormatString);
 
+    }
+
+    /**
+     * 切换相机的闪光灯
+     *
+     * @return
+     */
+    public boolean toggleFlashLight() {
+        if (mCamera != null) {
+            try {
+                Camera.Parameters mParameters = mCamera.getParameters();
+                if (isOpenFlashLight()) { //已经打开状态
+                    mParameters.setFlashMode(Camera.Parameters.FLASH_MODE_OFF);
+                } else {
+                    mParameters.setFlashMode(Camera.Parameters.FLASH_MODE_TORCH);
+                }
+                mCamera.setParameters(mParameters);
+                return true;
+            } catch (Exception ex) {
+                ex.printStackTrace();
+                return false;
+            }
+        } else {
+            return false;
+        }
+    }
+
+    /**
+     * @return
+     */
+    public boolean isOpenFlashLight() {
+        if (mCamera != null) {
+            Camera.Parameters mParameters = mCamera.getParameters();
+            String flashMode = mParameters.getFlashMode();
+            if (Camera.Parameters.FLASH_MODE_TORCH.equals(flashMode)) { //已经打开状态
+                return true;
+            } else {
+                return false;
+            }
+        } else {
+            return false;
+        }
     }
 
 }

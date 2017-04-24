@@ -182,7 +182,7 @@ public class QRCodeSupport {
         @Override
         protected QRCodeCameraDecode.CameraDecodeResult doInBackground(byte[]... params) {
 
-            return mCameraDecode.decode(params[0],params[1][0] == 1);
+            return mCameraDecode.decode(params[0], params[1][0] == 1);
         }
     }
 
@@ -264,6 +264,24 @@ public class QRCodeSupport {
         public int getScanRectHeight() {
             return scanRectHeight;
         }
+    }
+
+    /**
+     * 切换相机闪光灯.
+     *
+     * @return
+     */
+    public boolean toggleFlashLight() {
+        return mCameraManager.toggleFlashLight();
+    }
+
+    /**
+     * 相机闪光灯是否打开.
+     *
+     * @return
+     */
+    public boolean isOpenFlashLight() {
+        return mCameraManager.isOpenFlashLight();
     }
 
 }

@@ -26,7 +26,7 @@ import android.util.AttributeSet;
 import android.view.View;
 
 import com.google.zxing.ResultPoint;
-import com.zxing.support.library.R;
+import com.zxing.support.demo.R;
 import com.zxing.support.library.camera.CameraManager;
 import com.zxing.support.library.view.QRCodeFindView;
 
