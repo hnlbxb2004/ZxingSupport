@@ -9,9 +9,13 @@
 
 ##Gradle 依赖配置
 
+```gradle
       compile 'com.github.hnlbxb2004:zxingsupport:1.1.0'
+```
 
 ##扫码
+
+```java
     //初始化
       QRCodeSupport.Builder builder = new QRCodeSupport.Builder();
        //四个参数分别为：
@@ -49,21 +53,26 @@
               super.onDestroy();
               mQRCodeSupport.onDestory();
            }
+```
 
 ##扫码闪光灯打开关闭
-    mQrcodeSupport.toggleFlashLight();
 
+```java
+
+    mQrcodeSupport.toggleFlashLight();
+```
 
 
 ##二维码生成
 
+```java
     QRCodeEncode.Builder builder = new QRCodeEncode.Builder();
     builder.setBackgroundColor(0xffffff)
            .setOutputBitmapHeight(800)
            .setOutputBitmapWidth(800)
            .setOutputBitmapPadding(10);
     Bitmap qrCodeBitmap = builder.build().encode("www.baidu.com");
-
+```
 
 ##Demo 下载地址
 
