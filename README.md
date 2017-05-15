@@ -10,7 +10,7 @@
 ##Gradle 依赖配置
 
 ```gradle
-      compile 'com.github.hnlbxb2004:zxingsupport:1.1.0'
+      compile 'com.github.hnlbxb2004:zxingsupport:1.1.2'
 ```
 
 ##扫码

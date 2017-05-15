@@ -41,7 +41,7 @@ ext {
     siteUrl = 'https://github.com/hnlbxb2004/ZxingSupport'
     gitUrl = 'https://github.com/hnlbxb2004/ZxingSupport.git'
 
-    libraryVersion = '0.7'
+    libraryVersion = '1.1.2'
 
     developerId = 'hnlbxb2004'
     developerName = 'xubing'
