@@ -70,17 +70,15 @@ public class ScanActivityStyle1 extends AppCompatActivity implements QRCodeSuppo
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        mQRCodeSupport.onDestory();
     }
 
 
     @Override
     public void onScanResult(String notNullResult, byte[] resultBytes) {
-        Intent intent = new Intent();
+        Intent intent = new Intent(this,ResultActivity.class);
         intent.putExtra("result", notNullResult);
         intent.putExtra("resultByte", resultBytes);
-        setResult(Activity.RESULT_OK, intent);
-        finish();
+        startActivity(intent);
     }
 
     @Override
@@ -92,5 +90,13 @@ public class ScanActivityStyle1 extends AppCompatActivity implements QRCodeSuppo
 
     public void openFlashLight(View view) {
         mQRCodeSupport.toggleFlashLight();
+    }
+
+    public void add(View view) {
+        mQRCodeSupport.setZoom(5);
+    }
+
+    public void delete(View view) {
+        mQRCodeSupport.setZoom(-5);
     }
 }

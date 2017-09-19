@@ -135,17 +135,11 @@ public class QRCodeSupport {
      * 在activity 的onPause 中调用
      */
     public void onPause() {
-        isPrivew = false;
-        SurfaceHolder surfaceHolder = mSurfaceView.getHolder();
-        surfaceHolder.removeCallback(mSurfaceViewCallback);
-
-    }
-
-    public void onDestory() {
         mCameraManager.stopPreview();
         mCameraManager.closeDriver();
         isPrivew = false;
     }
+
 
     private class CameraDecodeTask extends AsyncTask<byte[], Void, QRCodeCameraDecode.CameraDecodeResult> {
 
@@ -169,7 +163,6 @@ public class QRCodeSupport {
                 mCameraManager.requestPreview(mPreviewCallback);
 
             if (result.getDecodeResult() == null) { // 未解析出来，重新解析
-                Log.d(TAG, "onPostExecute isPriview:" + isPrivew);
             } else { //解析出来
                 String resultString = result.getDecodeResult().getText();
                 if (!TextUtils.isEmpty(resultString) && mOnScanResultListener != null) {
@@ -282,6 +275,22 @@ public class QRCodeSupport {
      */
     public boolean isOpenFlashLight() {
         return mCameraManager.isOpenFlashLight();
+    }
+
+    /**
+     * 是否支持变焦
+     * @return
+     */
+    public boolean isZoomSupported(){
+        return mCameraManager.isZoomSupported();
+    }
+
+    /**
+     * 变焦
+     * @param value
+     */
+    public void setZoom(int value){
+        mCameraManager.setZoom(value);
     }
 
 }

@@ -67,16 +67,14 @@ public class ScanActivityStyle2 extends AppCompatActivity implements QRCodeSuppo
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        mQRCodeSupport.onDestory();
     }
 
     @Override
     public void onScanResult(String notNullResult,byte[] resultBytes) {
-        Intent intent = new Intent();
+        Intent intent = new Intent(this,ResultActivity.class);
         intent.putExtra("result", notNullResult);
-        intent.putExtra("resultByte",resultBytes);
-        setResult(Activity.RESULT_OK, intent);
-        finish();
+        intent.putExtra("resultByte", resultBytes);
+        startActivity(intent);
     }
 
     @Override

@@ -20,6 +20,7 @@
         </activity>
         <activity android:name=".ScanActivityStyle1" android:theme="@style/AppTheme.NoActionBarFullScreen"/>
         <activity android:name=".ScanActivityStyle2" android:theme="@style/AppTheme.NoActionBarFullScreen"/>
+        <activity android:name=".ResultActivity" android:theme="@style/AppTheme.NoActionBarFullScreen"/>
     </application>
 
 </manifest>

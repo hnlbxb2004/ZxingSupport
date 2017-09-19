@@ -18,12 +18,37 @@
         android:id="@+id/test"
         android:layout_width="200dp"
         android:layout_height="200dp" />
-
-    <Button
-        android:onClick="openFlashLight"
-        android:text="打开闪光灯"
-        android:gravity="center"
+    <LinearLayout
+        android:layout_gravity="bottom"
+        android:orientation="vertical"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_gravity="bottom" />
+        android:layout_height="wrap_content">
+        <LinearLayout
+            android:orientation="horizontal"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+            <Button
+                android:onClick="add"
+                android:text="放大"
+                android:layout_weight="1"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content" />
+
+            <Button
+                android:onClick="delete"
+                android:text="缩小"
+                android:layout_weight="1"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content" />
+
+        </LinearLayout>
+        <Button
+            android:onClick="openFlashLight"
+            android:text="打开闪光灯"
+            android:gravity="center"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            />
+    </LinearLayout>
+
 </FrameLayout>

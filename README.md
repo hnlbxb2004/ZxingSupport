@@ -48,21 +48,20 @@
               mQRCodeSupport.onPause();
           }
 
-          @Override
-          protected void onDestroy() {
-              super.onDestroy();
-              mQRCodeSupport.onDestory();
-           }
+       
 ```
 
 ##扫码闪光灯打开关闭
 
 ```java
-
     mQrcodeSupport.toggleFlashLight();
 ```
 
-
+##变焦
+```java
+    // value 为正  则放大，value 为 负则缩小
+    mQrcodeSupport.setZoom(int value);
+```
 ##二维码生成
 
 ```java
@@ -82,6 +81,9 @@
 
 
 ## 更新:
+    2017.09.19
+       修复跳转其他页面再回来 onResume 之后，预览异常的问题。
+       增加变焦功能（前提是摄像头要支持变焦，否则变焦无效）
     2017.04.24
        增加闪光灯切换
     2016.12.30

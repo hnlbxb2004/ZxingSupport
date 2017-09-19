@@ -5,10 +5,11 @@ import android.os.Handler;
 
 /**
  * 自动对焦
+ *
  * @author bingbing
  * @date 15/9/22
  */
-public class AutoFucesManager implements Camera.AutoFocusCallback{
+public class AutoFucesManager implements Camera.AutoFocusCallback {
 
 
     private static final long AUTO_FOCUS_TIMES = 1500L;
@@ -20,11 +21,12 @@ public class AutoFucesManager implements Camera.AutoFocusCallback{
 
     /**
      * 开始自动对焦
+     *
      * @param autoFucesListener
      */
     public void start(AutoFucesListener autoFucesListener) {
         mAutoFucesListener = autoFucesListener;
-        if (mCamera != null && !isAutoFucesIng){
+        if (mCamera != null && !isAutoFucesIng) {
             mCamera.autoFocus(this);
             isAutoFucesIng = true;
         }
@@ -45,21 +47,20 @@ public class AutoFucesManager implements Camera.AutoFocusCallback{
     }
 
 
-
     @Override
     public void onAutoFocus(boolean success, Camera camera) {
-        if (mAutoFucesListener != null){
+        if (mAutoFucesListener != null) {
             mAutoFucesListener.onAutoFocus(success, camera);
         }
-        if (isAutoFucesIng){
-            mHandler.postDelayed(mAutoRunnable,AUTO_FOCUS_TIMES);
+        if (isAutoFucesIng) {
+            mHandler.postDelayed(mAutoRunnable, AUTO_FOCUS_TIMES);
         }
     }
 
     private Runnable mAutoRunnable = new Runnable() {
         @Override
         public void run() {
-            if (mCamera != null){
+            if (mCamera != null) {
                 mCamera.autoFocus(AutoFucesManager.this);
             }
         }

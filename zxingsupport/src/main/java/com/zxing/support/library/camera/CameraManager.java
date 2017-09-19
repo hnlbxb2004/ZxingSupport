@@ -156,9 +156,9 @@ public class CameraManager {
 
 
         framingRectInPreview = rect;
-        Log.e(TAG, "cameraResolution:" + cameraResolution.toString());
-        Log.e(TAG, "screenResolution:" + screenResolution.toString());
-        Log.e(TAG, "framingRectInPreview:" + framingRectInPreview.toString());
+        Log.d(TAG, "cameraResolution:" + cameraResolution.toString());
+        Log.d(TAG, "screenResolution:" + screenResolution.toString());
+        Log.d(TAG, "framingRectInPreview:" + framingRectInPreview.toString());
         return framingRectInPreview;
     }
 
@@ -239,4 +239,29 @@ public class CameraManager {
         }
     }
 
+    public boolean isZoomSupported() {
+        if (mCamera == null) return false;
+        return mCamera.getParameters().isZoomSupported();
+    }
+
+    public void setZoom(int zoom) {
+        if (!isZoomSupported()){
+            Log.d("setZoom","false");
+            return;
+        }
+        try {
+            Camera.Parameters params = mCamera.getParameters();
+            final int MAX = params.getMaxZoom();
+            if(MAX==0)return;
+
+            int zoomValue = params.getZoom();
+            zoomValue += zoom;
+            params.setZoom(zoomValue);
+            mCamera.setParameters(params);
+
+        }catch (Exception e){
+            Log.d(TAG,"变焦异常");
+        }
+
+    }
 }
